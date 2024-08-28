@@ -5,6 +5,7 @@ class Cadetes
     private string direccion;
     private string telefono;
     private List<Pedido> listadoPedidos;
+    private int entregados;
 
     public Cadetes()
     {
@@ -15,6 +16,9 @@ class Cadetes
     public string Direccion { get => direccion; set => direccion = value; }
     public string Telefono { get => telefono; set => telefono = value; }
     public List<Pedido> ListadoPedidos { get => listadoPedidos; set => listadoPedidos = value; }
+    public int Entregados { get => entregados;set => entregados = value; }
+    
+
 
     public double jornalACobrar(List<Pedido> listadoDePedidos)
     {
