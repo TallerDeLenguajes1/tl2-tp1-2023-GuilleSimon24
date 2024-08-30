@@ -8,7 +8,6 @@ class Pedido
     {
         Aceptado,
         Entregado,
-        Enviando,
         Cancelado
     }
 

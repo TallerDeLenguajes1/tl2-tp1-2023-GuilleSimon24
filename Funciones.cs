@@ -9,7 +9,7 @@ class Funciones
 
     public List<Cadetes> cargarCadetes(string Ruta, List<Cadetes> listaCadetes)
     {
-        
+
         using (StreamReader sr = new StreamReader(Ruta))
         {
             string linea;
@@ -30,7 +30,7 @@ class Funciones
                 nombre = values[i + 1];
                 direccion = values[i + 2];
                 telefono = values[i + 3];
-                
+
                 listaCadetes.Add(new Cadetes(id, nombre, direccion, telefono));
             }
         }
@@ -38,7 +38,60 @@ class Funciones
 
     }
 
-    public List<Cadeteria> cargarCadeterias(string Ruta, List<Cadetes> listadoDeCadetes, List<Cadeteria> listaCadeteria){
+    public Pedido altaPedido(int id, Cliente clien, string observacion)
+    {
+        Pedido nuevo = new Pedido();
+        id++;
+        nuevo.Nro = id;
+        nuevo.Cliente = clien;
+        nuevo.Obs = observacion;
+        nuevo.Estado = Pedido.EstadoPedido.Aceptado;
+
+        return nuevo;
+    }
+
+    public Cadetes asignarPedido(Pedido pedi, Cadetes cade)
+    {
+        cade.ListadoPedidos.Add(pedi);
+        return cade;
+    }
+
+    public void cambiarEstado(Pedido pedido)
+    {
+        Console.WriteLine("Pedido entregado?");
+        Console.WriteLine("1_ Si");
+        Console.WriteLine("2_ No");
+        int opcion;
+        string opcionCad = Console.ReadLine();
+        int.TryParse(opcionCad, out opcion);
+        if (opcion == 1)
+        {
+            pedido.Estado = Pedido.EstadoPedido.Entregado;
+
+        }
+        else
+        {
+            pedido.Estado = Pedido.EstadoPedido.Cancelado;
+        }
+    }
+
+    public void reasignarPedido(int nroPedido, Cadetes saliendo, Cadetes entrando)
+    {
+        int final = saliendo.ListadoPedidos.Count();
+        Pedido pedi = saliendo.ListadoPedidos[nroPedido];
+        foreach (var item in saliendo.ListadoPedidos)
+        {
+            
+            if (item.Nro == nroPedido)
+            {
+                saliendo.ListadoPedidos.RemoveAt(nroPedido);
+            }
+        }
+        entrando.ListadoPedidos.Add(pedi);
+    }
+
+    public List<Cadeteria> cargarCadeterias(string Ruta, List<Cadetes> listadoDeCadetes, List<Cadeteria> listaCadeteria)
+    {
 
         using (StreamReader sr = new StreamReader(Ruta))
         {
@@ -56,7 +109,7 @@ class Funciones
 
                 nombre = values[i];
                 telefono = values[i + 1];
-                
+
                 listaCadeteria.Add(new Cadeteria(nombre, telefono, listadoDeCadetes));
             }
         }
