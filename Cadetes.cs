@@ -1,6 +1,6 @@
 class Cadetes
 {
-    private string id;
+    private int id;
     private string nombre;
     private string direccion;
     private string telefono;
@@ -11,7 +11,7 @@ class Cadetes
     {
     }
 
-    public Cadetes(string id, string nombre, string direccion, string telefono){
+    public Cadetes(int id, string nombre, string direccion, string telefono){
         this.id = id;
         this.nombre = nombre;
         this.direccion = direccion;
@@ -20,7 +20,7 @@ class Cadetes
         entregados = 0;
     } 
 
-    public string Id { get => id; set => id = value; }
+    public int Id { get => id; set => id = value; }
     public string Nombre { get => nombre; set => nombre = value; }
     public string Direccion { get => direccion; set => direccion = value; }
     public string Telefono { get => telefono; set => telefono = value; }
@@ -29,17 +29,39 @@ class Cadetes
     
 
 
-    public double jornalACobrar(List<Pedido> listadoDePedidos)
+    public double JornalACobrar()
     {
-        int cantidad = 0;
-        foreach (var item in listadoDePedidos)
+        int contador = 0;
+        foreach (var item in listadoPedidos)
         {
             if (item.Estado == Pedido.EstadoPedido.Entregado)
             {
-                cantidad++;
+                contador++;
             }
         }
 
-        return (cantidad * 500);
+        return contador * 500;
+    }
+
+
+
+    public void AgregarPedido(Pedido pedido)
+    {
+        listadoPedidos.Add(pedido);
+    }
+
+    public void EliminarPedido(Pedido pedido)
+    {
+        listadoPedidos.Remove(pedido);
+    }
+
+    public int ObtenerPedidosTotales()
+    {
+        return listadoPedidos.Count();
+    }
+
+    public bool TienePedido(Pedido pedido)
+    {
+        return listadoPedidos.Contains(pedido);
     }
 }

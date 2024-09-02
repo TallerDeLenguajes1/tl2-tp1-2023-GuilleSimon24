@@ -1,15 +1,29 @@
 
 class Funciones
 {
+    private Cadeteria miCadeteria;
     private string ruta;
 
 
     public string Ruta { get => ruta; set => ruta = value; }
 
+    private Pedido BuscarPedidoPorNumero(int nroPedido)
+    {
+        foreach (var cadete in miCadeteria.ListadoDeCadetes)
+        {
+            Pedido pedido = cadete.ListadoPedidos.FirstOrDefault(p => p.Nro == nroPedido);
+            if (pedido != null)
+            {
+                return pedido;
+            }
+        }
+        return null;
+    }
+
 
     public List<Cadetes> cargarCadetes(string Ruta, List<Cadetes> listaCadetes)
     {
-
+        
         using (StreamReader sr = new StreamReader(Ruta))
         {
             string linea;
@@ -22,11 +36,13 @@ class Funciones
 
                 int i = 0;
                 string nombre;
-                string id;
+                string idCadena;
+                int id;
                 string direccion;
                 string telefono;
 
-                id = values[i];
+                idCadena = values[i];
+                int.TryParse(idCadena, out id);
                 nombre = values[i + 1];
                 direccion = values[i + 2];
                 telefono = values[i + 3];
@@ -38,56 +54,102 @@ class Funciones
 
     }
 
-    public Pedido altaPedido(int id, Cliente clien, string observacion)
+    public void altaPedido()
     {
-        Pedido nuevo = new Pedido();
-        id++;
-        nuevo.Nro = id;
-        nuevo.Cliente = clien;
-        nuevo.Obs = observacion;
-        nuevo.Estado = Pedido.EstadoPedido.Aceptado;
+        Console.Write("Ingrese el número del pedido: ");
+        int nroPedido = int.Parse(Console.ReadLine());
+        Console.Write("Ingrese observaciones del pedido: ");
+        string observaciones = Console.ReadLine();
+        Console.Write("Ingrese el nombre del cliente: ");
+        string nombreCliente = Console.ReadLine();
+        Console.Write("Ingrese la dirección del cliente: ");
+        string direccionCliente = Console.ReadLine();
+        Console.Write("Ingrese el teléfono del cliente: ");
+        string telefonoCliente = Console.ReadLine();
+        Console.Write("Ingrese alguna referencia: ");
+        string referencia = Console.ReadLine();
 
-        return nuevo;
-    }
+        Cliente nuevoCliente = new Cliente(nombreCliente, direccionCliente, telefonoCliente, referencia);
+        Pedido nuevoPedido = new Pedido(nroPedido, observaciones, nuevoCliente, Pedido.EstadoPedido.Aceptado);
 
-    public Cadetes asignarPedido(Pedido pedi, Cadetes cade)
-    {
-        cade.ListadoPedidos.Add(pedi);
-        return cade;
-    }
+        Console.Write("Ingrese el ID del cadete al que se le asignará el pedido: ");
+        int idCadete = int.Parse(Console.ReadLine());
+        Cadetes cadete = miCadeteria.ListadoDeCadetes.FirstOrDefault(c => c.Id == idCadete);
 
-    public void cambiarEstado(Pedido pedido)
-    {
-        Console.WriteLine("Pedido entregado?");
-        Console.WriteLine("1_ Si");
-        Console.WriteLine("2_ No");
-        int opcion;
-        string opcionCad = Console.ReadLine();
-        int.TryParse(opcionCad, out opcion);
-        if (opcion == 1)
+        if (cadete != null)
         {
-            pedido.Estado = Pedido.EstadoPedido.Entregado;
-
+            cadete.AgregarPedido(nuevoPedido);
+            Console.WriteLine("Pedido asignado exitosamente al cadete.");
         }
         else
         {
-            pedido.Estado = Pedido.EstadoPedido.Cancelado;
+            Console.WriteLine("Cadete no encontrado.");
+        }
+
+
+    }
+
+    private void asignarPedido()
+    {
+        Console.Write("Ingrese el número del pedido a asignar: ");
+        int nroPedido = int.Parse(Console.ReadLine());
+        Pedido pedido = BuscarPedidoPorNumero(nroPedido);
+
+        if (pedido != null)
+        {
+            Console.Write("Ingrese el ID del cadete al que se le asignará el pedido: ");
+            int idCadete = int.Parse(Console.ReadLine());
+            Cadetes cadete = miCadeteria.ListadoDeCadetes.FirstOrDefault(c => c.Id == idCadete);
+
+            if (cadete != null)
+            {
+                cadete.AgregarPedido(pedido);
+                Console.WriteLine("Pedido asignado exitosamente al cadete.");
+            }
+            else
+            {
+                Console.WriteLine("Cadete no encontrado.");
+            }
+        }
+        else
+        {
+            Console.WriteLine("Pedido no encontrado.");
         }
     }
 
-    public void reasignarPedido(int nroPedido, Cadetes saliendo, Cadetes entrando)
+
+    private void reasignarPedido()
     {
-        int final = saliendo.ListadoPedidos.Count();
-        Pedido pedi = saliendo.ListadoPedidos[nroPedido];
-        foreach (var item in saliendo.ListadoPedidos)
+        Console.Write("Ingrese el número del pedido a reasignar: ");
+        int nroPedido = int.Parse(Console.ReadLine());
+        Pedido pedido = BuscarPedidoPorNumero(nroPedido);
+
+        if (pedido != null)
         {
-            
-            if (item.Nro == nroPedido)
+            Console.Write("Ingrese el ID del nuevo cadete: ");
+            int idNuevoCadete = int.Parse(Console.ReadLine());
+            Cadetes nuevoCadete = miCadeteria.ListadoDeCadetes.FirstOrDefault(c => c.Id == idNuevoCadete);
+
+            if (nuevoCadete != null)
             {
-                saliendo.ListadoPedidos.RemoveAt(nroPedido);
+                var cadeteAnterior = miCadeteria.ListadoDeCadetes.FirstOrDefault(c => c.TienePedido(pedido));
+                if (cadeteAnterior != null)
+                {
+                    cadeteAnterior.EliminarPedido(pedido);
+                }
+                nuevoCadete.AgregarPedido(pedido);
+                Console.WriteLine("Pedido reasignado exitosamente.");
+            }
+            else
+            {
+                Console.WriteLine("Nuevo cadete no encontrado.");
             }
         }
-        entrando.ListadoPedidos.Add(pedi);
+        else
+        {
+            Console.WriteLine("Pedido no encontrado.");
+        }
+
     }
 
     public List<Cadeteria> cargarCadeterias(string Ruta, List<Cadetes> listadoDeCadetes, List<Cadeteria> listaCadeteria)
@@ -116,9 +178,15 @@ class Funciones
         return listaCadeteria;
     }
 
-    public int mostrarMenu()
+    public void mostrarMenu()
     {
         Console.WriteLine("Elija una opcion: ");
+        Console.WriteLine("1_ Dar de alta un pedido");
+        Console.WriteLine("2_ Asignar pedido a un cadete");
+        Console.WriteLine("3_ Cambiar de estado un pedido");
+        Console.WriteLine("4_ Reasignar pedido a otro cadete");
+        Console.WriteLine("5_ Mostrar informe");
+        Console.WriteLine("6_ Terminar el día");
         string opcionCad = Console.ReadLine();
         int opcion;
         bool anda = int.TryParse(opcionCad, out opcion);
@@ -128,28 +196,86 @@ class Funciones
             switch (opcion)
             {
                 case 1:
-                    Console.WriteLine("1_ Dar de alta un pedido");
+                    altaPedido();
                     break;
                 case 2:
-                    Console.WriteLine("2_ Asignar pedido a un cadete");
+                    asignarPedido();
                     break;
                 case 3:
-                    Console.WriteLine("3_ Cambiar de estado un pedido");
+                    CambiarEstadoPedido();
                     break;
                 case 4:
-                    Console.WriteLine("4_ Reasignar pedido a otro cadete");
+                    reasignarPedido();
                     break;
                 case 5:
-                    Console.WriteLine("5_ Terminar el día");
+                    GenerarInforme();
+                    break;
+                case 6:
+                    Console.WriteLine("Fin del dia! Hasta luego!");
                     break;
                 default:
                     Console.WriteLine("Elija una opcion valida");
                     break;
             }
+        }
+    }
 
+    private void CambiarEstadoPedido()
+    {
+        Console.Write("Ingrese el número del pedido: ");
+        int nroPedido = int.Parse(Console.ReadLine());
+        Pedido pedido = BuscarPedidoPorNumero(nroPedido);
+
+        if (pedido != null)
+        {
+            Console.WriteLine("Seleccione el nuevo estado del pedido:");
+            Console.WriteLine("1. Pendiente");
+            Console.WriteLine("2. Entregado");
+            int opcionEstado = int.Parse(Console.ReadLine());
+
+            switch (opcionEstado)
+            {
+                case 1:
+                    pedido.Estado = Pedido.EstadoPedido.Aceptado;
+                    break;
+                case 2:
+                    pedido.Estado = Pedido.EstadoPedido.Entregado;
+                    break;
+                default:
+                    Console.WriteLine("Opción no válida.");
+                    break;
+            }
+
+            Console.WriteLine("Estado del pedido actualizado.");
+        }
+        else
+        {
+            Console.WriteLine("Pedido no encontrado.");
+        }
+    }
+    private void GenerarInforme()
+    {
+        Console.WriteLine("=== Informe de Pedidos - Fin de Jornada ===\n");
+
+        // Calcular el monto ganado y la cantidad de envíos de cada cadete
+        foreach (var cadete in miCadeteria.ListadoDeCadetes)
+        {
+            int cantidadEnvios = cadete.ListadoPedidos.Count;
+            double montoGanado = cadete.JornalACobrar();
+            Console.WriteLine($"Cadete: {cadete.Nombre}");
+            Console.WriteLine($"Cantidad de Envíos: {cantidadEnvios}");
+            Console.WriteLine($"Monto Ganado: ${montoGanado}\n");
         }
 
-        return opcion;
+        // Calcular el total de envíos de todos los cadetes
+        int totalEnvios = miCadeteria.ListadoDeCadetes.Sum(c => c.ListadoPedidos.Count);
+
+        // Calcular el promedio de envíos por cadete
+        double promedioEnvios = miCadeteria.ListadoDeCadetes.Count > 0 ? (double)totalEnvios / miCadeteria.ListadoDeCadetes.Count : 0;
+
+        Console.WriteLine("=== Resumen ===");
+        Console.WriteLine($"Total de Envíos: {totalEnvios}");
+        Console.WriteLine($"Promedio de Envíos por Cadete: {promedioEnvios:F2}\n");
     }
 }
 

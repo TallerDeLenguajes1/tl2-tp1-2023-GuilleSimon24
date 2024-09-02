@@ -11,8 +11,12 @@ class Pedido
         Cancelado
     }
 
-    public Pedido()
+    public Pedido(int nro, string obs, Cliente cliente, EstadoPedido estado)
     {
+        this.nro = nro;
+        this.obs = obs;
+        this.cliente = cliente;
+        this.estado = estado;
     }
 
     public int Nro { get => nro; set => nro = value; }

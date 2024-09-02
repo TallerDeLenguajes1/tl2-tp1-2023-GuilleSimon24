@@ -5,8 +5,12 @@ class Cliente
     private string telefono;
     private string datosReferenciaDireccion;
 
-    public Cliente()
+    public Cliente(string nombre, string direccion, string telefono, string datosReferenciaDireccion)
     {
+        this.nombre = nombre;
+        this.direccion = direccion;
+        this.telefono = telefono;
+        this.datosReferenciaDireccion = datosReferenciaDireccion;
     }
 
     public string Nombre { get => nombre; set => nombre = value; }
