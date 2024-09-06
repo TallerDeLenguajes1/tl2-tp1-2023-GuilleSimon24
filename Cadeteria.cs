@@ -34,9 +34,6 @@ class Cadeteria
         return contador * 500;
     }
 
-    public void AsignarCadeteAPedido(){
-
-    }
 
 
 

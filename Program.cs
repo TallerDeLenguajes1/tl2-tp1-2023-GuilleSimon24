@@ -8,15 +8,5 @@ misCadeterias = misFunciones.cargarCadeterias(@"C:\1_Guillermo\Guardar\Facultad\
 misCadeterias[0].ListadoDeCadetes = cadetes;
 misFunciones.MiCadeteria = misCadeterias[0];
 misFunciones.inicializar();
-/*Console.WriteLine("Cadetes");
 
-foreach (var item in misCadeterias[0].ListadoDeCadetes)
-{
-    Console.WriteLine(item.Id);
-    Console.WriteLine(item.Nombre);
-    Console.WriteLine(item.Telefono);
-    Console.WriteLine(item.Direccion);
-    Console.WriteLine("");
-    
-}*/
-
+misFunciones.mostrarMenu();

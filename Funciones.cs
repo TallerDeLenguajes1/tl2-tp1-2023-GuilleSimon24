@@ -93,7 +93,7 @@ class Funciones
 
     }
 
-    private void asignarPedido()
+    private string asignarPedido()
     {
         Console.Write("Ingrese el número del pedido a asignar: ");
         int nroPedido = int.Parse(Console.ReadLine());
@@ -108,21 +108,21 @@ class Funciones
             if (cadete != null)
             {
                 MiCadeteria.AgregarPedido(pedido, miCadeteria.ListadoPedidos);
-                Console.WriteLine("Pedido asignado exitosamente al cadete.");
+                return "Pedido asignado exitosamente al cadete.";
             }
             else
             {
-                Console.WriteLine("Cadete no encontrado.");
+                return "Cadete no encontrado.";
             }
         }
         else
         {
-            Console.WriteLine("Pedido no encontrado.");
+            return "Pedido no encontrado.";
         }
     }
 
 
-    private void reasignarPedido()
+    private string reasignarPedido()
     {
         Console.Write("Ingrese el número del pedido a reasignar: ");
         int nroPedido = int.Parse(Console.ReadLine());
@@ -142,16 +142,16 @@ class Funciones
                     MiCadeteria.EliminarPedido(pedido);
                 }
                 MiCadeteria.AgregarPedido(pedido, miCadeteria.ListadoPedidos);
-                Console.WriteLine("Pedido reasignado exitosamente.");
+                return "Pedido reasignado exitosamente.";
             }
             else
             {
-                Console.WriteLine("Nuevo cadete no encontrado.");
+                return "Nuevo cadete no encontrado.";
             }
         }
         else
         {
-            Console.WriteLine("Pedido no encontrado.");
+            return "Pedido no encontrado.";
         }
 
     }
@@ -230,7 +230,7 @@ class Funciones
         }
     }
 
-    private void CambiarEstadoPedido()
+    private string CambiarEstadoPedido()
     {
         Console.Write("Ingrese el número del pedido: ");
         int nroPedido = int.Parse(Console.ReadLine());
@@ -256,11 +256,11 @@ class Funciones
                     break;
             }
 
-            Console.WriteLine("Estado del pedido actualizado.");
+            return "Estado del pedido actualizado.";
         }
         else
         {
-            Console.WriteLine("Pedido no encontrado.");
+            return "Pedido no encontrado.";
         }
     }
     private void GenerarInforme()
