@@ -4,6 +4,8 @@ class Pedido
     private string obs;
     private Cliente cliente;
     private EstadoPedido estado;
+
+    private Cadetes cadeteACargo;
     public enum EstadoPedido
     {
         Aceptado,
@@ -23,6 +25,7 @@ class Pedido
     public string Obs { get => obs; set => obs = value; }
     public Cliente Cliente { get => cliente; set => cliente = value; }
     internal EstadoPedido Estado { get => estado; set => estado = value; }
+    internal Cadetes CadeteACargo { get => cadeteACargo; set => cadeteACargo = value; }
 
     public string VerDireccionCliente(Cliente cliente){
         return cliente.Direccion;

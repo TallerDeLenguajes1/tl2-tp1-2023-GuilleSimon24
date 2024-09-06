@@ -4,14 +4,18 @@ class Funciones
     private Cadeteria miCadeteria;
     private string ruta;
 
-
     public string Ruta { get => ruta; set => ruta = value; }
+    public Cadeteria MiCadeteria { get => miCadeteria; set => miCadeteria = value; }
+
+    public void inicializar(){
+        miCadeteria.ListadoPedidos = new List<Pedido>();
+    }
 
     private Pedido BuscarPedidoPorNumero(int nroPedido)
     {
-        foreach (var cadete in miCadeteria.ListadoDeCadetes)
+        foreach (var cadete in MiCadeteria.ListadoPedidos)
         {
-            Pedido pedido = cadete.ListadoPedidos.FirstOrDefault(p => p.Nro == nroPedido);
+            Pedido pedido = MiCadeteria.ListadoPedidos.FirstOrDefault(p => p.Nro == nroPedido);
             if (pedido != null)
             {
                 return pedido;
@@ -78,7 +82,7 @@ class Funciones
 
         if (cadete != null)
         {
-            cadete.AgregarPedido(nuevoPedido);
+            miCadeteria.AgregarPedido(nuevoPedido, miCadeteria.ListadoPedidos);
             Console.WriteLine("Pedido asignado exitosamente al cadete.");
         }
         else
@@ -99,11 +103,11 @@ class Funciones
         {
             Console.Write("Ingrese el ID del cadete al que se le asignará el pedido: ");
             int idCadete = int.Parse(Console.ReadLine());
-            Cadetes cadete = miCadeteria.ListadoDeCadetes.FirstOrDefault(c => c.Id == idCadete);
+            Cadetes cadete = MiCadeteria.ListadoDeCadetes.FirstOrDefault(c => c.Id == idCadete);
 
             if (cadete != null)
             {
-                cadete.AgregarPedido(pedido);
+                MiCadeteria.AgregarPedido(pedido, miCadeteria.ListadoPedidos);
                 Console.WriteLine("Pedido asignado exitosamente al cadete.");
             }
             else
@@ -128,16 +132,16 @@ class Funciones
         {
             Console.Write("Ingrese el ID del nuevo cadete: ");
             int idNuevoCadete = int.Parse(Console.ReadLine());
-            Cadetes nuevoCadete = miCadeteria.ListadoDeCadetes.FirstOrDefault(c => c.Id == idNuevoCadete);
+            Cadetes nuevoCadete = MiCadeteria.ListadoDeCadetes.FirstOrDefault(c => c.Id == idNuevoCadete);
 
             if (nuevoCadete != null)
             {
-                var cadeteAnterior = miCadeteria.ListadoDeCadetes.FirstOrDefault(c => c.TienePedido(pedido));
+                var cadeteAnterior = MiCadeteria.ListadoDeCadetes.FirstOrDefault(c => MiCadeteria.TienePedido(pedido));
                 if (cadeteAnterior != null)
                 {
-                    cadeteAnterior.EliminarPedido(pedido);
+                    MiCadeteria.EliminarPedido(pedido);
                 }
-                nuevoCadete.AgregarPedido(pedido);
+                MiCadeteria.AgregarPedido(pedido, miCadeteria.ListadoPedidos);
                 Console.WriteLine("Pedido reasignado exitosamente.");
             }
             else
@@ -197,24 +201,30 @@ class Funciones
             {
                 case 1:
                     altaPedido();
+                    mostrarMenu();
                     break;
                 case 2:
                     asignarPedido();
+                    mostrarMenu();
                     break;
                 case 3:
                     CambiarEstadoPedido();
+                    mostrarMenu();
                     break;
                 case 4:
                     reasignarPedido();
+                    mostrarMenu();
                     break;
                 case 5:
                     GenerarInforme();
+                    mostrarMenu();
                     break;
                 case 6:
                     Console.WriteLine("Fin del dia! Hasta luego!");
                     break;
                 default:
                     Console.WriteLine("Elija una opcion valida");
+                    mostrarMenu();
                     break;
             }
         }
@@ -258,20 +268,20 @@ class Funciones
         Console.WriteLine("=== Informe de Pedidos - Fin de Jornada ===\n");
 
         // Calcular el monto ganado y la cantidad de envíos de cada cadete
-        foreach (var cadete in miCadeteria.ListadoDeCadetes)
+        foreach (var cadete in MiCadeteria.ListadoDeCadetes)
         {
-            int cantidadEnvios = cadete.ListadoPedidos.Count;
-            double montoGanado = cadete.JornalACobrar();
+            int cantidadEnvios = MiCadeteria.ListadoPedidos.Count;
+            double montoGanado = MiCadeteria.JornalACobrar(cadete);
             Console.WriteLine($"Cadete: {cadete.Nombre}");
             Console.WriteLine($"Cantidad de Envíos: {cantidadEnvios}");
             Console.WriteLine($"Monto Ganado: ${montoGanado}\n");
         }
 
         // Calcular el total de envíos de todos los cadetes
-        int totalEnvios = miCadeteria.ListadoDeCadetes.Sum(c => c.ListadoPedidos.Count);
+        int totalEnvios = MiCadeteria.ListadoDeCadetes.Sum(c => MiCadeteria.ListadoPedidos.Count);
 
         // Calcular el promedio de envíos por cadete
-        double promedioEnvios = miCadeteria.ListadoDeCadetes.Count > 0 ? (double)totalEnvios / miCadeteria.ListadoDeCadetes.Count : 0;
+        double promedioEnvios = MiCadeteria.ListadoDeCadetes.Count > 0 ? (double)totalEnvios / MiCadeteria.ListadoDeCadetes.Count : 0;
 
         Console.WriteLine("=== Resumen ===");
         Console.WriteLine($"Total de Envíos: {totalEnvios}");
