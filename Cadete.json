@@ -1,0 +1,32 @@
+[
+    {
+      "Id": 1,
+      "Nombre": "Simon Guillermo",
+      "Direccion": "M i c 8 - B° odonto",
+      "Telefono": "3812025422"
+    },
+    {
+      "Id": 2,
+      "Nombre": "Nancy Beatriz",
+      "Direccion": "Avenida Roca 123",
+      "Telefono": "3815555555"
+    },
+    {
+      "Id": 3,
+      "Nombre": "Pablo Bernardo",
+      "Direccion": "San Martin 456",
+      "Telefono": "3816666666"
+    },
+    {
+      "Id": 4,
+      "Nombre": "Lucia Fernandez",
+      "Direccion": "Belgrano 789",
+      "Telefono": "3819988776"
+    },
+    {
+      "Id": 5,
+      "Nombre": "Juan Gomez",
+      "Direccion": "Independencia 1010",
+      "Telefono": "3814455667"
+    }
+  ]

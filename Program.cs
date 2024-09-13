@@ -1,12 +1,36 @@
 ﻿Cadeteria miCadeteria = new Cadeteria();
-Funciones misFunciones = new Funciones();
-List<Cadetes> cadetes = new List<Cadetes>();
-List<Cadeteria> misCadeterias = new List<Cadeteria>();
-cadetes = misFunciones.cargarCadetes(@"C:\1_Guillermo\Guardar\Facultad\TallerDeLenguajes2\TP1-POO\tl2-tp1-2023-GuilleSimon24\cadetes.csv", cadetes);
-misCadeterias = misFunciones.cargarCadeterias(@"C:\1_Guillermo\Guardar\Facultad\TallerDeLenguajes2\TP1-POO\tl2-tp1-2023-GuilleSimon24\cadeteria.csv", cadetes, misCadeterias);
+ManejoUI UI = new ManejoUI();
 
-misCadeterias[0].ListadoDeCadetes = cadetes;
-misFunciones.MiCadeteria = misCadeterias[0];
-misFunciones.inicializar();
+Console.WriteLine("1. CSV");
+Console.WriteLine("2. JSON");
+Console.Write("\nSeleccione el tipo de acceso a datos:");
+string opcion = Console.ReadLine();
 
-misFunciones.mostrarMenu();
+AccesoADatos accesoDatos;
+string extension;
+
+switch (opcion)
+{
+    case "1":
+        accesoDatos = new AccesoCSV();
+        extension = ".csv";
+        break;
+    case "2":
+        accesoDatos = new AccesoJSON();
+        extension = ".json";
+        break;
+    default:
+        Console.WriteLine("Opción no válida. Se utilizará acceso CSV por defecto.");
+        accesoDatos = new AccesoCSV();
+        extension = ".csv";
+        break;
+}
+
+miCadeteria = accesoDatos.CargarDatos("Cadeteria", "Cadete", miCadeteria, extension);
+
+
+UI.MostrarMenu(miCadeteria);
+
+
+//todo lo necesario para un pedido
+//miCadeteria.AgregarPedido()

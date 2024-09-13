@@ -1,6 +1,7 @@
-class Cadeteria
+public class Cadeteria
 {
     private string nombre;
+    private string direccion;
     private string telefono;
     private List<Cadetes> listadoDeCadetes;
     private List<Pedido> listadoPedidos;
@@ -19,6 +20,7 @@ class Cadeteria
     public string Telefono { get => telefono; set => telefono = value; }
     public List<Cadetes> ListadoDeCadetes { get => listadoDeCadetes; set => listadoDeCadetes = value; }
     public List<Pedido> ListadoPedidos { get => listadoPedidos; set => listadoPedidos = value; }
+    public string Direccion { get => direccion; set => direccion = value; }
 
     public double JornalACobrar(Cadetes cadete)
     {
@@ -33,8 +35,6 @@ class Cadeteria
 
         return contador * 500;
     }
-
-
 
 
     public List<Pedido> AgregarPedido(Pedido pedido, List<Pedido> ListadoPedidos)
@@ -64,4 +64,8 @@ class Cadeteria
     {
         return ListadoPedidos.Contains(pedido);
     }
+
+
+
+
 }

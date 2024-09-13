@@ -1,4 +1,4 @@
-class Pedido
+public class Pedido
 {
     private int nro;
     private string obs;
@@ -19,6 +19,10 @@ class Pedido
         this.obs = obs;
         this.cliente = cliente;
         this.estado = estado;
+    }
+
+    public Pedido()
+    {
     }
 
     public int Nro { get => nro; set => nro = value; }

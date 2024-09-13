@@ -1,4 +1,4 @@
-class Cadetes
+public class Cadetes
 {
     private int id;
     private string nombre;
