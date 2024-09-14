@@ -25,9 +25,11 @@ public class AccesoCSV : AccesoADatos
             Console.WriteLine($"El archivo {archivoCadetes + extension} no existe en la ruta especificada: {rutaArchivoCadetes}");
             return miCadeteria;
         }
+        
 
         using (StreamReader archivo = new StreamReader(rutaArchivoCadeteria))
         {
+            archivo.ReadLine();
             string separador = ",";
             string linea;
             while ((linea = archivo.ReadLine()) != null)

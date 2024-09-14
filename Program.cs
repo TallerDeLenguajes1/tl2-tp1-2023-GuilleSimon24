@@ -1,5 +1,4 @@
 ﻿Cadeteria miCadeteria = new Cadeteria();
-ManejoUI UI = new ManejoUI();
 
 Console.WriteLine("1. CSV");
 Console.WriteLine("2. JSON");
@@ -28,9 +27,121 @@ switch (opcion)
 
 miCadeteria = accesoDatos.CargarDatos("Cadeteria", "Cadete", miCadeteria, extension);
 
+MostrarMenu();
 
-UI.MostrarMenu(miCadeteria);
+//Logica menu
+
+    List<string> MostrarMenu()
+    {
+        List<string> resultados = new List<string>();
+        return GenerarOpciones(resultados);
+    }
+
+    List<string> GenerarOpciones(List<string> resultados)
+    {
+        string opcionCad;
+        do
+        {
+            Console.WriteLine("Elija una opcion: ");
+            Console.WriteLine("1_ Dar de alta un pedido");
+            Console.WriteLine("2_ Asignar pedido a un cadete");
+            Console.WriteLine("3_ Cambiar de estado un pedido");
+            Console.WriteLine("4_ Reasignar pedido a otro cadete");
+            Console.WriteLine("5_ Mostrar informe");
+            Console.WriteLine("6_ Terminar el día");
+            opcionCad = Console.ReadLine();
 
 
-//todo lo necesario para un pedido
-//miCadeteria.AgregarPedido()
+            switch (opcionCad)
+            {
+                case "1":
+                    var pedidoSinAsignar = miCadeteria.AltaPedido();
+                    miCadeteria.listarPedido(pedidoSinAsignar);
+                    resultados.Add("Pedido agregado correctamente.");
+                    break;
+
+                case "2":
+                    if (miCadeteria.AsignarPedido())
+                    {
+                        resultados.Add("Pedido agregado al cadete correctamente.");
+                    }
+                    else
+                    {
+                        resultados.Add("Ocurrio un error, no pudiste tomar el pedido");
+                    }
+                    break;
+
+                case "3":
+                    if (miCadeteria.CambiarEstadoPedido())
+                    {
+                        resultados.Add("Cambiaste el estado del pedido correctamente.");
+                    }
+                    else
+                    {
+                        resultados.Add("No pudo cambiar el estado del pedido, intente nuevamente.");
+                    }
+                    break;
+
+                case "4":
+                    if (miCadeteria.ReasignarPedido())
+                    {
+                        resultados.Add("Pedido reasignado correctamente.");
+                    }
+                    else
+                    {
+                        resultados.Add("No pudo reasignar el pedido, intentelo nuevamente.");
+                    }
+                    break;
+                case "5":
+                    return GenerarInforme(miCadeteria);
+
+                case "6":
+                    resultados.Add("Saliendo del sistema...");
+                    break;
+
+                default:
+                    resultados.Add("Opción no válida. Intente nuevamente.");
+                    break;
+            }
+        } while (opcionCad != "6");
+
+        return resultados;
+    }
+
+
+    List<string> GenerarInforme(Cadeteria miCadeteria)
+    {
+        List<string> informe = new List<string>
+    {
+        "=== Informe de Pedidos - Fin de Jornada ===\n"
+    };
+        foreach (var cadete in miCadeteria.ListadoDeCadetes)
+        {
+
+            IEnumerable<Pedido> pedidosDelCadete = miCadeteria.ListadoPedidos
+                .Where(pedido => pedido.CadeteACargo != null &&
+                                 pedido.CadeteACargo.Id == cadete.Id &&
+                                 pedido.Estado == Pedido.EstadoPedido.Entregado);
+
+            int cantidadEnvios = pedidosDelCadete.Count();
+            double montoGanado = miCadeteria.JornalACobrar(cadete);
+
+            informe.Add($"Cadete: {cadete.Nombre}");
+            informe.Add($"Cantidad de Envíos: {cantidadEnvios}");
+            informe.Add($"Monto Ganado: ${montoGanado}\n");
+        }
+
+        int totalEnvios = miCadeteria.ListadoPedidos
+            .Count(pedido => pedido.Estado == Pedido.EstadoPedido.Entregado);
+
+        double promedioEnvios = miCadeteria.ListadoDeCadetes.Count > 0
+            ? (double)totalEnvios / miCadeteria.ListadoDeCadetes.Count
+            : 0;
+
+        informe.Add($"Total de Envíos: {totalEnvios}");
+        informe.Add($"Promedio de Envíos por Cadete: {promedioEnvios:F2}\n");
+
+        return informe;
+    }
+
+
